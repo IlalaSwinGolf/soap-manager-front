@@ -1,0 +1,25 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th class="text-center">Catégories</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let category of categories">
+      <th>{{ category.name | uppercase}}</th>
+      <td><button type="button" class="btn btn-warning">Modifier</button></td>
+      <td><button type="button" class="btn btn-danger">Supprimer</button></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="container">
+  <form #f="ngForm" (ngSubmit)="addCategory(f)">
+    <div class="input-group">
+      <input type="text" name="name" ngModel required #name="ngModel" class="form-control" placeholder="Nouvelle catégorie">
+      <div class="input-group-append">
+        <input type="submit" class="btn btn-success" value="Ajouter">
+      </div>
+    </div>
+  </form>
+</div>
