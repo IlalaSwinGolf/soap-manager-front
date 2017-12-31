@@ -13,38 +13,49 @@ export class CategoryComponent {
   public categories: Category[];
 
   constructor(private service: CategoryService) {
-    this.service.getCategories().subscribe((categories: Category[]) => {
-      let sortedCategories = categories.sort((c1, c2) => {
-        if (c1.name > c2.name) {
-          return 1;
-        }
-        if (c1.name < c2.name) {
-          return -1;
-        }
-        return 0;
-      });
-      this.categories = sortedCategories;
+    this.service.getAll().subscribe((categories: Category[]) => {
+      this.categories = categories;
     });
   }
 
-  addCategory(f) {
-    console.log(f);
-    this.service.addCategory(new Category(f.value.name)).subscribe((category: Category) => {
+  add(f) {
+    this.service.add(new Category(f.value.name)).subscribe((category: Category) => {
       this.categories.push(category);
     });
   }
 
-  removeCategory(category: Category, $event) {
-    $event.stopPropagation();
-    $event.preventDefault();
-    this.service.removeCategory(category).subscribe((success: boolean) => {
-      console.log(success);
+  remove(category: Category, $event) {
+    this.stopPropagation($event);
+    this.service.remove(category).subscribe((success: boolean) => {
       if (success) {
-        let index = this.categories.indexOf(category);
-        if (index != -1) {
-          this.categories.splice(index, 1);
-        }
+        this.removeCategoryFromList(category);
       }
     });
+  }
+
+  removeCategoryFromList(category: Category) {
+    let index = this.categories.indexOf(category);
+    if (index != -1) {
+      this.categories.splice(index, 1);
+    }
+  }
+
+  edit(category: Category, $event) {
+    this.stopPropagation($event);
+    this.service.edit(category.id, category).subscribe((editedCategory: Category) => {
+      this.removeCategoryFromList(category);
+      this.categories.push(editedCategory);
+    });
+  }
+
+  toggleEdit(category: Category, $event) {
+    this.stopPropagation($event);
+    category.displayEdit = !category.displayEdit;
+    console.log(category.displayEdit);
+  }
+
+  stopPropagation($event) {
+    $event.stopPropagation();
+    $event.preventDefault();
   }
 }

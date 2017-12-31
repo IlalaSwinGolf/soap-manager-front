@@ -9,7 +9,7 @@ const API_URL = 'http://localhost:8000/api/v1';
 export class CategoryService {
     constructor(protected http: Http) { }
 
-    public getCategories(): Observable<Category[]> {
+    public getAll(): Observable<Category[]> {
         return this.http
             .get(API_URL + '/category')
             .map(response => {
@@ -20,7 +20,7 @@ export class CategoryService {
             .catch(this.handleError);
     }
 
-    public addCategory(category: Category): Observable<Category> {
+    public add(category: Category): Observable<Category> {
         return this.http.post('http://localhost:8000/api/v1/category', category)
             .map(response => {
                 return Category.fromJson(response.json().data);
@@ -28,10 +28,21 @@ export class CategoryService {
             .catch(this.handleError);
     }
 
-    public removeCategory(category: Category): Observable<boolean> {
+    public remove(category: Category): Observable<boolean> {
         return this.http.delete('http://localhost:8000/api/v1/category/' + category.id)
             .map(response => {
                 return !response.json().error;
+            })
+            .catch(this.handleError);
+    }
+
+    public edit(id: number, category: Category): Observable<Category> {
+        let url = 'http://localhost:8000/api/v1/category/' + id;
+        console.log(url);
+        console.log(category);
+        return this.http.put(url, { name: category.name })
+            .map(response => {
+                return Category.fromJson(response.json().data);
             })
             .catch(this.handleError);
     }
@@ -47,12 +58,14 @@ export class Category {
             json['name'],
             json['id'],
             new Date(json['created_at']),
-            new Date(json['updated_at'])
+            new Date(json['updated_at']),
+            false
         );
     }
 
     constructor(public name: string, public id?: number,
         public createdAt?: Date,
-        public updatedAt?: Date) {
+        public updatedAt?: Date,
+        public displayEdit?: boolean) {
     }
 }

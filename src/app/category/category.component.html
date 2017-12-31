@@ -4,15 +4,17 @@
       <ng-template ngbPanelTitle>
         <div class="row">
           <div class="col-sm-8">
-            <span>{{ category.name }}</span>
+            <span *ngIf="!category.displayEdit">{{ category.name }}</span>
+            <input type="text" *ngIf="category.displayEdit" [(ngModel)]="category.name" (keyup.enter)="edit(category, $event)" (click)="stopPropagation($event)"
+              placeholder="{{ category.name }}" autofocus>
           </div>
           <div class="col-sm-2">
-            <a href="#" class="btn btn-info btn-lg">
+            <a href="#" class="btn btn-info btn-lg" (click)="toggleEdit(category, $event)">
             <span class="glyphicon glyphicon-edit"></span> Editer
           </a>
           </div>
           <div class="col-sm-2">
-            <a href="#" class="btn btn-danger btn-lg" (click)="removeCategory(category, $event)">
+            <a href="#" class="btn btn-danger btn-lg" (click)="remove(category, $event)">
               <span class="glyphicon glyphicon-remove"></span> Supprimer 
             </a>
           </div>
@@ -27,7 +29,7 @@
 </div>
 
 <div class="container">
-  <form #f="ngForm" (ngSubmit)="addCategory(f)">
+  <form #f="ngForm" (ngSubmit)="add(f)">
     <div class="input-group">
       <input type="text" name="name" ngModel required #name="ngModel" class="form-control" placeholder="Nouvelle catégorie">
       <div class="input-group-append">
