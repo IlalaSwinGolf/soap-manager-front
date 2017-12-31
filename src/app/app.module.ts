@@ -9,7 +9,8 @@ import { AppComponent } from './app.component';
 import { MainContentComponent } from './main-content/main-content.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
-import { CategoryComponent, DataService } from './category/category.component';
+import { CategoryComponent } from './category/category.component';
+import { CategoryService } from './category/category.service'
 import { DateFormatPipe } from './pipes/date.pipe'
 
 import { registerLocaleData } from '@angular/common';
@@ -24,7 +25,7 @@ registerLocaleData(localeFr, 'fr');
     HeaderComponent,
     FooterComponent,
     CategoryComponent,
-    DateFormatPipe
+    DateFormatPipe,
   ],
   imports: [
     BrowserModule,
@@ -32,7 +33,7 @@ registerLocaleData(localeFr, 'fr');
     HttpModule,
     FormsModule
   ],
-  providers: [DataService],
+  providers: [CategoryService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
