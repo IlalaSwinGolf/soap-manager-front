@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
-
-const API_URL = 'http://localhost:8000/api/v1';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class CategoryService {
@@ -11,7 +10,7 @@ export class CategoryService {
 
     public getAll(): Observable<Category[]> {
         return this.http
-            .get(API_URL + '/category')
+            .get(environment.API_URL + 'category')
             .map(response => {
                 const categories = response.json();
                 console.log(categories.data);
@@ -21,7 +20,7 @@ export class CategoryService {
     }
 
     public add(category: Category): Observable<Category> {
-        return this.http.post('http://localhost:8000/api/v1/category', category)
+        return this.http.post(environment.API_URL + 'category', category)
             .map(response => {
                 return Category.fromJson(response.json().data);
             })
@@ -29,15 +28,15 @@ export class CategoryService {
     }
 
     public remove(category: Category): Observable<boolean> {
-        return this.http.delete('http://localhost:8000/api/v1/category/' + category.id)
+        return this.http.delete(environment.API_URL + 'category/' + category.id)
             .map(response => {
-                return !response.json().error;
+                return response.json().success;
             })
             .catch(this.handleError);
     }
 
     public edit(id: number, category: Category): Observable<Category> {
-        let url = 'http://localhost:8000/api/v1/category/' + id;
+        let url = environment.API_URL + 'category/' + id;
         console.log(url);
         console.log(category);
         return this.http.put(url, { name: category.name })
