@@ -1,6 +1,7 @@
 import { NgModel } from '@angular/forms/src/directives';
 import { Component } from '@angular/core';
 import { Category, CategoryService } from './category.service';
+import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 
 
 @Component({
@@ -8,13 +9,17 @@ import { Category, CategoryService } from './category.service';
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.css']
 })
-export class CategoryComponent {
+export class CategoryComponent implements OnInit {
 
   public categories: Category[];
 
   constructor(private service: CategoryService) {
+  }
+
+  ngOnInit(){
     this.service.getAll().subscribe((categories: Category[]) => {
       this.categories = categories;
+      console.log(this.categories.map(category => category.products));
     });
   }
 

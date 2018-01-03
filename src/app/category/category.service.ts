@@ -3,6 +3,8 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { environment } from '../../environments/environment';
+import { Product } from '../product/product.service';
+
 
 @Injectable()
 export class CategoryService {
@@ -13,7 +15,6 @@ export class CategoryService {
             .get(environment.API_URL + 'category')
             .map(response => {
                 const categories = response.json();
-                console.log(categories.data);
                 return categories.data.map((category) => Category.fromJson(category));
             })
             .catch(this.handleError);
@@ -37,8 +38,6 @@ export class CategoryService {
 
     public edit(id: number, category: Category): Observable<Category> {
         let url = environment.API_URL + 'category/' + id;
-        console.log(url);
-        console.log(category);
         return this.http.put(url, { name: category.name })
             .map(response => {
                 return Category.fromJson(response.json().data);
@@ -58,6 +57,7 @@ export class Category {
             json['id'],
             new Date(json['created_at']),
             new Date(json['updated_at']),
+            json['products'],
             false
         );
     }
@@ -65,6 +65,7 @@ export class Category {
     constructor(public name: string, public id?: number,
         public createdAt?: Date,
         public updatedAt?: Date,
+        public products?: Product[],
         public displayEdit?: boolean) {
     }
 }
